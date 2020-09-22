@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -19,39 +20,33 @@ public class Board {
 
 
         private static final int TILE_SIZE = 40;
-        public static final int W = Main.x * TILE_SIZE;
-        private static final int H = Main.y * TILE_SIZE;
+        private int W, H;
 
-        private static final int X_TILES = W / TILE_SIZE;
-        private static final int Y_TILES = H / TILE_SIZE;
 
-        private Tile[][] grid = new Tile[X_TILES][Y_TILES];
-        private Scene scene;
+        private Tile[][] grid;
         public static Scene scene1;
 
-        public static Stage boardStage;
-    //Main main = new Main();
 
 
-    public static Stage getBoardStage() {
-        return boardStage;
-    }
 
-    public Scene createContent(Stage primaryStage) {
+    public Scene createContent(int w, int h) {
+        W = w * TILE_SIZE;
+        H = h * TILE_SIZE;
             Pane root = new Pane();
             root.setPrefSize(W, H);
+        grid = new Tile[w][h];
 
-            for (int y = 0; y < Y_TILES; y++) {
-                for (int x = 0; x < X_TILES; x++) {
-                    Tile tile = new Tile(x, y, Math.random() < 0.1);
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    Tile tile = new Tile(x, y, Math.random() < 0.2);
 
                     grid[x][y] = tile;
                     root.getChildren().add(tile);
                 }
             }
 
-            for (int y = 0; y < Y_TILES; y++) {
-                for (int x = 0; x < X_TILES; x++) {
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
                     Tile tile = grid[x][y];
 
                     if (tile.hasBomb)
@@ -63,12 +58,8 @@ public class Board {
                         tile.text.setText(String.valueOf(bombs));
                 }
             }
-        System.out.println("jestem w board");
+
             scene1 = new Scene(root);
-            /*
-            primaryStage.setScene(scene1);
-            primaryStage.show();
-             */
             return scene1;
     }
 
@@ -94,8 +85,8 @@ public class Board {
                 int newX = tile.x + dx;
                 int newY = tile.y + dy;
 
-                if (newX >= 0 && newX < X_TILES
-                        && newY >= 0 && newY < Y_TILES) {
+                if (newX >= 0 && newX < W / 40
+                        && newY >= 0 && newY < H / 40) {
                     neighbors.add(grid[newX][newY]);
                 }
             }
@@ -136,7 +127,7 @@ public class Board {
 
                 if (hasBomb) {
                     System.out.println("Game Over");
-                    //main.restart(boardStage);
+                    restart();
                     return;
                 }
 
@@ -149,5 +140,16 @@ public class Board {
                 }
             }
         }
+
+    public  void restart(){
+        Main.primaryStage.close();
+        Platform.runLater( () -> {
+            try {
+                new Main().start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 }

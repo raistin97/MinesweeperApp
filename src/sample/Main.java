@@ -11,20 +11,16 @@ package sample;
         import javafx.scene.text.Text;
         import javafx.stage.Stage;
 
-        import java.util.Scanner;
 
 
 public class Main extends Application {
 
 
         private Scene scene;
-        //private Scene secoundscene;
 
         public static Stage primaryStage;
 
         Board board = new Board();
-        public static int x;
-        public static int y;
 
         private Parent createContent() {
             GridPane lobby = new GridPane();
@@ -47,15 +43,7 @@ public class Main extends Application {
             Button accept = new Button("Accept");
             lobby.add(accept, 1, 2);
 
-            accept.setOnAction(__ ->
-            {
-                scene = board.createContent(primaryStage);
-                primaryStage.setScene(scene);
-                //restart(primaryStage);
-                primaryStage.show();
-                restart();
-                System.out.println("jestem tu");
-            });
+            accept.setOnAction(e -> primaryStage.setScene(board.createContent((int)rowspinner.getValue(), (int)columnspinner.getValue())));
 
             return lobby;
         }
@@ -76,6 +64,7 @@ public class Main extends Application {
         @Override
         public void start(Stage stage) throws Exception {
             primaryStage = stage;
+            stage = primaryStage;
             primaryStage.setResizable(false);
             scene = new Scene(createContent());
 
