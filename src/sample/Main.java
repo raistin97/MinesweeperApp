@@ -61,6 +61,23 @@ public class Main extends Application {
             });
         }
 
+    public Scene createContentInfo(String information) {
+        GridPane informationForUser = new GridPane();
+        informationForUser.setHgap(1);
+        informationForUser.setVgap(0);
+
+        Text row = new Text(information);
+        informationForUser.add(row, 0, 0);
+
+        Button accept = new Button("Accept");
+        informationForUser.add(accept, 1, 0);
+
+        accept.setOnAction(e -> board.restart());
+
+        scene = new Scene(informationForUser);
+        return scene;
+    }
+
         @Override
         public void start(Stage stage) throws Exception {
             primaryStage = stage;

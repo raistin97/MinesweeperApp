@@ -4,11 +4,14 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -20,13 +23,15 @@ public class Board {
 
 
         private static final int TILE_SIZE = 40;
-        private int W, H;
+        private int W, H, b;
+        private int winNumb;
 
 
         private Tile[][] grid;
         public static Scene scene1;
+        public static Scene scene2;
 
-
+    //InformationScene luse_win_scene = new InformationScene();
 
 
     public Scene createContent(int w, int h) {
@@ -38,7 +43,7 @@ public class Board {
 
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
-                    Tile tile = new Tile(x, y, Math.random() < 0.2);
+                    Tile tile = new Tile(x, y, Math.random() < 0.1);
 
                     grid[x][y] = tile;
                     root.getChildren().add(tile);
@@ -122,18 +127,27 @@ public class Board {
             }
 
             public void open() {
-                if (isOpen)
-                    return;
-
-                if (hasBomb) {
-                    System.out.println("Game Over");
-                    restart();
+                if (isOpen) {
                     return;
                 }
 
+                if (hasBomb) {
+                    Main.primaryStage.close();
+                    Main.primaryStage.setScene(createContent("You Luse"));
+                    Main.primaryStage.show();
+                    return;
+                }
+                winNumb ++;
+
+                if (winNumb == ((W / 40 * H / 40) * 0.9) - 1 ) {
+                    Main.primaryStage.close();
+                    Main.primaryStage.setScene(createContent("You Win"));
+                    Main.primaryStage.show();
+                }
                 isOpen = true;
                 text.setVisible(true);
                 border.setFill(null);
+
 
                 if (text.getText().isEmpty()) {
                     getNeighbors(this).forEach(Tile::open);
@@ -150,6 +164,22 @@ public class Board {
                 e.printStackTrace();
             }
         });
+    }
+
+    public Scene createContent(String information) {
+        GridPane informationForUser = new GridPane();
+        informationForUser.setHgap(0);
+        informationForUser.setVgap(1);
+
+
+        Button accept = new Button(information);
+        accept.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
+        informationForUser.add(accept, 0, 1);
+
+        accept.setOnAction(e -> restart());
+
+        scene2 = new Scene(informationForUser);
+        return scene2;
     }
 
 }
