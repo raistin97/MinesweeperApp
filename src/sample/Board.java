@@ -23,7 +23,7 @@ public class Board {
 
 
         private static final int TILE_SIZE = 40;
-        private int W, H, b;
+        private int W, H;
         private int winNumb;
 
 
@@ -31,7 +31,6 @@ public class Board {
         public static Scene scene1;
         public static Scene scene2;
 
-    //InformationScene luse_win_scene = new InformationScene();
 
 
     public Scene createContent(int w, int h) {

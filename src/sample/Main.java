@@ -86,6 +86,7 @@ public class Main extends Application {
             scene = new Scene(createContent());
 
            stage.setScene(scene);
+           stage.setTitle("MineSweeper");
             stage.show();
 
 
