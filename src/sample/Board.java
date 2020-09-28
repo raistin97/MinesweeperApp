@@ -33,7 +33,7 @@ public class Board {
 
 
 
-    public Scene createContent(int w, int h) {
+    public Scene createContent(int w, int h, double deficult) {
         W = w * TILE_SIZE;
         H = h * TILE_SIZE;
             Pane root = new Pane();
@@ -42,7 +42,7 @@ public class Board {
 
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
-                    Tile tile = new Tile(x, y, Math.random() < 0.1);
+                    Tile tile = new Tile(x, y, Math.random() < deficult);
 
                     grid[x][y] = tile;
                     root.getChildren().add(tile);
@@ -132,7 +132,7 @@ public class Board {
 
                 if (hasBomb) {
                     Main.primaryStage.close();
-                    Main.primaryStage.setScene(createContent("You Luse"));
+                    Main.primaryStage.setScene(UserInformation.createContent("You Luse"));
                     Main.primaryStage.show();
                     return;
                 }
@@ -140,7 +140,7 @@ public class Board {
 
                 if (winNumb == ((W / 40 * H / 40) * 0.9) - 1 ) {
                     Main.primaryStage.close();
-                    Main.primaryStage.setScene(createContent("You Win"));
+                    Main.primaryStage.setScene(UserInformation.createContent("You Win"));
                     Main.primaryStage.show();
                 }
                 isOpen = true;
@@ -154,31 +154,15 @@ public class Board {
             }
         }
 
-    public  void restart(){
-        Main.primaryStage.close();
+    public static void restart(){
         Platform.runLater( () -> {
             try {
-                new Main().start(new Stage());
+                Main.primaryStage.setScene(Main.lobbyScene);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
-    public Scene createContent(String information) {
-        GridPane informationForUser = new GridPane();
-        informationForUser.setHgap(0);
-        informationForUser.setVgap(1);
-
-
-        Button accept = new Button(information);
-        accept.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
-        informationForUser.add(accept, 0, 1);
-
-        accept.setOnAction(e -> restart());
-
-        scene2 = new Scene(informationForUser);
-        return scene2;
-    }
 
 }
